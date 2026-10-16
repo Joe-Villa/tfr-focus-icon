@@ -1,0 +1,13 @@
+# 运行依赖（都在本地跑，不花 API 钱）
+Pillow>=10
+numpy>=1.24,<2
+scipy>=1.10
+
+# 抠图后端：装了它 + 下好模型（python3 scripts/rmbg.py --download）才走 RMBG-1.4，
+# 否则自动退回色键抠图（效果差一些，但能跑）。
+onnxruntime>=1.16
+
+# 说明：**不要装 rembg**。它要求 numpy>=2.3，会顶掉 numpy 1.x，scipy 直接
+# `numpy.core.multiarray failed to import`（踩过，见 references/pitfalls.md §6）。
+# 另外还需要一个中文字体来叠标语：/usr/share/fonts/opentype/noto/NotoSansCJK-*.ttc
+# （Debian/Ubuntu 上来自 fonts-noto-cjk 包）。

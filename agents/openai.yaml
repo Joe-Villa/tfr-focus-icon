@@ -1,0 +1,4 @@
+interface:
+  display_name: "HOI4 国策生成 / HOI4 Focus Generator"
+  short_description: "给 HOI4 国策生成 icon：写实照片拼贴、透明背景 PNG、直接能进 mod"
+  default_prompt: "用 $hoi4-focus-generator 给 PRC 做一个国策 icon：<国策名>，画面内容是 <内容>"
