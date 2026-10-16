@@ -1,24 +1,31 @@
-# HOI4 Focus Generator
+# TFR Focus Icon Generator
 
 English | [中文](README.md)
 
-Focus icons for *Hearts of Iron IV*: **hand over a focus name and a one-line description, get back a PNG
-that drops straight into your mod.**
+Focus icons in *The Fire Rises* (TFR) style, for TFR and its submods: **hand over a focus name and a
+one-line description, get back a PNG that drops straight into your mod.**
 
 ## Why this exists
 
-Every national focus in a HOI4 focus tree has its own little picture — roughly 175×150 px, transparent
-background, irregular silhouette, photobashed composite, dark outline with a soft outer glow. Making a
-good one is real work: sourcing material, cutting, layering, grading, then resizing, outlining, adding a
-slogan and wiring it into the mod. Multiply that by a whole focus tree and it becomes a chore.
+TFR's focus icons are one of its best-known faces: roughly 175×150 px, transparent background,
+irregular silhouette, **photobashed composite**, diagonally stacked elements, dark outline with a soft
+outer glow. Making a good one is real work: sourcing material, cutting, layering, grading, then
+resizing, outlining, adding a slogan and wiring it into the mod. Multiply that by a whole focus tree
+and it becomes a chore.
 
 This project hands that pipeline to an AI agent: **a request goes in, a finished icon comes out**, no
 human babysitting in between.
 
-The visual style is not a matter of taste — it is **calibrated numerically**. A few thousand icons from
-a real mod were measured (canvas size, ink coverage, silhouette solidity, soft-edge ratio, outline width,
-slogan size) and every generated icon has to pass two numeric gates (statistical alignment plus a hard
-junk check) before it counts as usable. "Looks right" and "measures right" are the same thing here.
+The visual style is not a matter of taste — it is **calibrated numerically against real TFR artwork**.
+Hundreds of TFR icons were measured (canvas size, ink coverage, silhouette solidity, soft-edge ratio,
+outline width, slogan size) and every generated icon has to pass two numeric gates (statistical
+alignment plus a hard junk check) before it counts as usable. "Looks like TFR" and "measures like TFR"
+are the same thing here.
+
+**The defaults are tuned for TFR.** Other styles (vanilla HOI4's flat icons, other mods' art) are not
+out of reach, but they need recalibration: measure your own reference set with
+`scripts/metrics.py --stats --mod <your icons dir>`, then adjust `palette / treatments / tight_target`
+in the design JSON. TFR is the one style that works out of the box.
 
 ## Cost
 

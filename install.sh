@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 把本仓库安装（或更新）成 Codex skill：$CODEX_HOME/skills/hoi4-focus-generator
+# 把本仓库安装（或更新）成 Codex skill：$CODEX_HOME/skills/tfr-focus-icon
 #
 # 为什么是"拷贝"而不是软链接：Codex 枚举 skills 时**不会跟进软链接目录**
 # （实测：在 ~/.codex/skills/ 下放一个指向仓库的软链接，会话的 skills 清单里不会出现它）。
@@ -7,7 +7,7 @@
 set -euo pipefail
 
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-name="hoi4-focus-generator"
+name="tfr-focus-icon"
 dest="${CODEX_HOME:-$HOME/.codex}/skills/$name"
 
 if ! [ -f "$here/SKILL.md" ]; then

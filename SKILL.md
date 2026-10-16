@@ -1,16 +1,17 @@
 ---
-name: hoi4-focus-generator
-description: 给《钢铁雄心 4》(HOI4) 的任何国策生成 icon——写实照片拼贴、透明背景 PNG、最小改动接进 mod。风格基准量化自《The Fire Rises》(TFR)/TNO 一系真品图标，用于"给某个国家/国策做一张国策图标"的需求。
+name: tfr-focus-icon
+description: 生成《The Fire Rises》(TFR)/TNO 风格的 HOI4 国策 icon——写实照片拼贴、不规则剪影、透明背景 PNG、最小改动接进 mod。默认后处理参数照 TFR 真品量化校准（尺寸/内容占比/剪影实心度/半透明边/描边），用于"给某个国家/国策做一张 TFR 风格图标"的需求。
 metadata:
-  short-description: 生成 HOI4 国策 icon
+  short-description: 生成 TFR 风格国策 icon
 ---
 
-# HOI4 国策 icon
+# TFR 风格国策 icon
 
-产出：一张能直接放进 HOI4 mod 的 PNG——**透明背景、不规则剪影、写实照片拼贴、深色描边 + 柔和外发光、高饱和**，
+产出：一张能直接放进 TFR/TFR 系 mod 的 PNG——**透明背景、不规则剪影、写实照片拼贴、深色描边 + 柔和外发光、高饱和**，
 高 140-150px、宽 140-208px（真品中位 175×150），可选叠一句粗体标语（真品里约三成带中/英/日标语）。
 
-风格基准就是真品本身：任何 TFR/TNO 一系的 mod，真品 icon 都在 `<mod>/gfx/interface/goals/**/*.png`。
+**这套风格就是 TFR 的风格**（TNO 一系同源）：照片拼贴、元素斜向叠压、深描边加外发光。
+真品就在 TFR 及 TFR 系子 mod 的 `<mod>/gfx/interface/goals/**/*.png`。
 **本仓库不含参考图**（真品是他人作品，不随包分发）——要定基准就指向你自己那份安装目录，
 用本仓库自带的工具现拼一张对照图（纯本地，不联网）：
 
@@ -23,7 +24,7 @@ python3 scripts/refsheet.py --mod "<mod>/gfx/interface/goals" --out refs/_contac
 
 ## 安装与依赖
 
-- 装进 Codex：在仓库根目录跑 `./install.sh`（把本仓库拷进 `$CODEX_HOME/skills/hoi4-focus-generator`；
+- 装进 Codex：在仓库根目录跑 `./install.sh`（把本仓库拷进 `$CODEX_HOME/skills/tfr-focus-icon`；
   这是拷贝不是软链，改过仓库就重跑一次）。
 - 本地依赖：Python 3 + `Pillow` + `numpy`；抠图走 RMBG-1.4 ONNX，需要 `onnxruntime`，模型首次用
   `python3 scripts/rmbg.py --download` 拉到 `~/.cache/tfricon/`。**本地不需要 GPU。**

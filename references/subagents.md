@@ -30,11 +30,11 @@
 你负责为本轮 icon 取参考图。铁规则：任何未过闸门的图片，都不要当成"可用素材"交出去。
 
 1) 下载（会自动校验+重试，坏文件不会留在正式路径）：
-   python3 ~/.codex/skills/hoi4-focus-generator/scripts/fetch_ref.py <refs>/<name>.jpg \
+   python3 ~/.codex/skills/tfr-focus-icon/scripts/fetch_ref.py <refs>/<name>.jpg \
        --commons "File:<Xxx>.jpg" --width 1600 --manifest <refs>/manifest.jsonl
    # 或 --url "https://..."
 2) 入会话闸门（只有 PASS 的才允许看）：
-   python3 ~/.codex/skills/hoi4-focus-generator/scripts/refguard.py gate <refs>/*.jpg <refs>/*.png --probe
+   python3 ~/.codex/skills/tfr-focus-icon/scripts/refguard.py gate <refs>/*.jpg <refs>/*.png --probe
 3) 只对 GATE PASS 的图 view_image，然后写 <refs>/NOTES.md：
    每张 1-2 句 —— 画面内容 / 能否直接用 / 建议怎么裁或用在哪。
 4) 回给我的必须是文字：PASS 的绝对路径清单 + manifest 路径 + NOTES 摘要。
