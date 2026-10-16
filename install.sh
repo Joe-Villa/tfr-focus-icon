@@ -23,7 +23,8 @@ if command -v rsync >/dev/null 2>&1; then
         "$here"/ "$dest"/
 else
   echo "没有 rsync，改用 cp（不会删除目标目录里的旧文件）" >&2
-  for item in SKILL.md scripts references agents README.md README.en.md LICENSE; do
+  for item in SKILL.md scripts references agents README.md README.en.md LICENSE \
+              requirements.txt selftest.sh; do
     [ -e "$here/$item" ] && cp -r "$here/$item" "$dest/"
   done
 fi
