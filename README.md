@@ -60,11 +60,19 @@ TFR 的国策图标是它最出名的门面之一：大约 175×150 像素、透
 
 这里不写操作步骤，因为使用者是 Agent，不是人。
 
+## 交付预算与停机
+
+Agent 不再无限微调：默认一轮 6 张候选、最多 2 次局部修整、8 次看图、20 分钟
+（元素拼贴/图生图 30 分钟）；通过 `qa_gate` 与 `metrics.py --strict` 就必须交付，
+预算用尽也同样收口。背景、完整规则与验证方式见
+[docs/stop-conditions.md](docs/stop-conditions.md)。
+
 ## 仓库里有什么
 
 | 文件 | 内容 |
 |---|---|
 | `SKILL.md` | 给 Agent 读的完整工作流与硬规则（Agent 的入口） |
+| `docs/stop-conditions.md` | 交付预算、停机条件与 `metrics.py --strict` 的更新说明 |
 | `references/` | 细节：风格卡与量化基准、拼贴构图、踩坑与排查表、接入 mod、子 Agent 分工、用视觉模型自评 |
 | `scripts/` | 可直接调用的工具：出图驱动、API 客户端、抠图、后处理、客观指标、废品检查、计费账本、参考图闸门、真品对照图拼版 |
 | `install.sh` | 装进 Codex 的安装脚本（把本仓库拷进 `$CODEX_HOME/skills/`） |

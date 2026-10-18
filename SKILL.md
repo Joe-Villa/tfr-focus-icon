@@ -55,6 +55,25 @@ python3 scripts/refsheet.py --mod "<mod>/gfx/interface/goals" --out refs/_contac
 7. 每张成品都要过一遍数字检查：`scripts/metrics.py`（对齐真品统计值）+ `scripts/qa_gate.py`（硬性废品检查）。
    **两个都过才算合格**；只看 metrics 会被"洋红底板"这种废品骗过去（见 pitfalls.md 里的废品案例）。
 
+## 停机规则（硬性，优先于"再像一点"）
+
+每个 icon 任务都有交付预算。达到任一上限就**立即收口**，不要用"还能更像"继续开新版本。
+
+- **生成预算**：直出路径默认 **1 轮 × 6 张候选**，最多 2 轮/12 张；元素拼贴或图生图路径默认
+  **1 套元素 + 1 次排版**，最多 2 次排版。任何路径都不允许第 3 轮；首轮有 PASS 候选时，
+  从中选最好的，不再整轮重出。
+- **修整预算**：首轮后最多 **2 次局部修整**。每次修整必须对应 `metrics.py --strict` 的具体提示，
+  或一个明确的视觉硬伤（人物不对、旗帜/文字错误、剪影矩形化）；"感觉还能更像"不算修整理由。
+- **看图预算**：整个任务默认最多 **8 次 `view_image`**。每轮只看 `contact.png`；定稿再看 1 次 1:1
+  和 1 次与真品并排。禁止逐版全量看图；外部参考图按铁律 0 交给子 Agent，不占主对话的看图预算。
+- **墙钟预算**：普通出图默认 **20 分钟**，元素拼贴/图生图默认 **30 分钟**。到点立即交付当前最佳版本。
+- **交付条件**：`qa_gate.py` 返回 `PASS`，`metrics.py --strict` 返回 0，且 1:1 预览没有人物/旗帜/文字硬伤。
+  三者同时满足就**停止优化并交付**，不再做"更像原版"的微调。
+- **不满足也必须停**：预算用尽仍不满足时，交付当前最佳版本，列出未达标指标和下一轮建议；
+  **不要继续自动生成**。只有用户明确说"继续修"才追加一轮预算。
+- **禁止的循环**：同一张图在同一指标上连续调整 2 次仍无改善；已经 PASS 后只为"更像"继续调参；
+  已经生成最终 PNG 又开新变体。出现任一情况，立即交付并结束本任务。
+
 ## 工作流
 
 1. **问清楚**（缺了就直接问用户）：国家 TAG、国策名（中/英）、画面要表达什么、要不要标语、装到哪个 mod。
@@ -90,19 +109,22 @@ python3 scripts/refsheet.py --mod "<mod>/gfx/interface/goals" --out refs/_contac
    ```
 
    自动并行出图 → 抠图 → 紧密化 → 描边发光 → 分级 → 缩到国策尺寸 → 输出 `out/final_*.png`、`out/contact.png`。
-6. **看图挑**（`view_image` 看 `out/contact.png`，必要时放大单张）。不满意就改 design 重跑，不要硬交。
+   默认只跑这一轮；有 PASS 候选就进入挑选，不要因为"可能还有更好的"再跑一轮。
+6. **看图挑**（`view_image` 看 `out/contact.png`，定稿时最多再放大单张一次）。
    候选多的时候可以把"初筛排序"丢给子 Agent，但**最终定稿那张必须自己看**。
+   若首轮全部 FAIL/不可用，先按停机规则判断是否还有第 2 轮预算；没有就直接交付最佳并说明原因。
 7. **过数字**：
 
    ```bash
-   python3 scripts/metrics.py out/final_*.png --profile   # cov/soft/tight/comp/edge + 边缘剖面
+   python3 scripts/metrics.py out/final_*.png --strict --profile   # 返回 0 才算指标达标
    python3 scripts/qa_gate.py out/final_*.png             # PASS/WARN/FAIL（键色污染、长宽比、实心度）
    ```
 
-   `tight` 偏低 → 元素放大压实（或调 `tight_target`）；出现 FAIL → 直接放弃这张，重出。
+   `tight` 偏低 → 元素放大压实（或调 `tight_target`）；出现 FAIL → 直接放弃这张，从已有候选里换一张。
+   `--strict` 返回非 0 时，只允许按它打印的具体提示做一次针对性修整，不要凭感觉继续调参。
 8. 需要"多贴片叠压"的拼贴质感时读 [references/composition.md](references/composition.md)，跑 `scripts/compose_icon.py`
    （每个元素单独出图，更费 API；元素图**必须**过 qa_gate 的污染检查）。
-9. **交付**：PNG 给用户；要装进 mod 就跑
+9. **交付**：满足交付条件，或预算用尽时，立即把 PNG 给用户；要装进 mod 就跑
    `python3 scripts/install_to_mod.py out/final_x.png --mod <mod根> --tag PRC --slug PRC_xxx`，
    细节（PNG 放哪、gfx 怎么写、国策怎么引用）见 [references/integration.md](references/integration.md)。
 

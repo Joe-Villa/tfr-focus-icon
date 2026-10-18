@@ -130,6 +130,8 @@ def main() -> int:
     ap.add_argument("--vs", default=None, help="和参考分布对比（默认自动找 references/tfr_stats.json）")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--profile", action="store_true", help="额外打印边缘剖面")
+    ap.add_argument("--strict", action="store_true",
+                    help="任一指标出参考区间就以非 0 退出（用于停机闸门）")
     args = ap.parse_args()
 
     if args.stats:
@@ -165,6 +167,7 @@ def main() -> int:
     if ref:
         print("\n真实 TFR 参考（median）：cov=%.3f soft=%.3f tight=%.3f comp=%.1f edge=%.1f"
               % (ref["cov"]["median"], ref["soft"]["median"], ref["tight"]["median"], ref["comp"]["median"], ref["edge"]["median"]))
+        any_tip = False
         for r in rows:
             tips = []
             if r["tight"] < ref["tight"]["p25"]:
@@ -173,7 +176,17 @@ def main() -> int:
                 tips.append("边缘太碎（少用细碎元素、收敛外发光）")
             if r["cov"] < ref["cov"]["p25"]:
                 tips.append("内容占比偏低（放大主体/减小留白）")
+            if r["cov"] > ref["cov"]["p75"]:
+                tips.append("内容占比偏高（火场/背景铺满；按主体 alpha 轮廓收缩）")
+            if r["edge"] > ref["edge"]["p75"]:
+                tips.append("内容贴边（剪影被裁成矩形；按真品透明轮廓收边）")
+            any_tip = any_tip or bool(tips)
             print(f"  {Path(r['file']).name}: " + ("; ".join(tips) if tips else "指标落在真品区间内 ✅"))
+        if args.strict and any_tip:
+            return 1
+    elif args.strict:
+        print("--strict 需要参考分布（先跑 --stats 或提供 --vs）", file=sys.stderr)
+        return 2
     if args.json:
         print(json.dumps(rows, ensure_ascii=False, indent=2))
     if args.profile:

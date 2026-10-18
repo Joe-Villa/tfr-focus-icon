@@ -73,11 +73,21 @@ there: prompts, candidates, cutout, acceptance checks, mod installation.
 
 No step-by-step instructions here, because the user is an agent, not a person.
 
+## Delivery budget and stop conditions
+
+The agent no longer refines without a bound: by default it generates one round of 6 candidates,
+allows at most 2 local refinements and 8 image views, and stops at 20 minutes (30 minutes for
+element collage / image editing). Once both `qa_gate` and `metrics.py --strict` pass, it must
+deliver; when the budget runs out, it must deliver the best current candidate and report what
+is still missing. See [docs/stop-conditions.md](docs/stop-conditions.md) for the full rules
+(in Chinese) and verification commands.
+
 ## What's in the repo
 
 | File | Content |
 |---|---|
 | `SKILL.md` | The workflow and hard rules the agent reads (the entry point) |
+| `docs/stop-conditions.md` | Delivery budget, stop conditions, and the `metrics.py --strict` update |
 | `references/` | Details: style card and numeric baselines, collage composition, pitfalls and troubleshooting, mod integration, sub-agent split, visual self-review |
 | `scripts/` | Ready-to-call tools: generation driver, API client, cutout, post-processing, objective metrics, junk gate, cost ledger, reference-image gate, reference contact sheet |
 | `install.sh` | Installs this repo into your Codex skills directory (`$CODEX_HOME/skills/`) |
